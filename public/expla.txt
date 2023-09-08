@@ -1,0 +1,34 @@
+Nuxt 3 的靜態資源
+Nuxt 3 使用專案下的兩個目錄來提供使用者處理圖片、樣式或字體，這兩個目錄分別為 public 與 assets。
+
+public 目錄
+在 Nuxt 3 的專案根目錄下，存在一個名為 public 的目錄，這個目錄如同 Vue 中的 public 目錄或 Nuxt 2 中的 static 目錄。這個目錄下的檔案，將會由 Nuxt 直接於網站的根路徑，例如 / 提供存取。
+
+例如建立 ./public/robots.txt 將可以使用 http://localhost:3000/robots.txt 存取。
+
+通常我們會在 public 目錄放置不常更動的檔案，或是需要保留檔案的名稱，例如 robots.txt 就需要一個固定的名稱，才能正確的被搜尋引擎的爬蟲所解析再決定檢索的規則，抑或 sitemap.xml 與 favicon.ico 檔案等，都很適合放置在 public 目錄。
+
+你可能也會想，那圖片或 CSS 樣式，我也不常變動，難道就不能放置在 public 目錄嗎？
+
+行，當然行，哪次不行！
+
+舉個例子，我們將一張圖片 bg.png 放置於 public 目錄下，專案目錄下其他檔案就先不列，整個結構大概長的像下面這樣。
+
+nuxt-app/
+├── public/
+│   └── bg.png
+└── app.vue
+
+
+根據規則，我可以使用 http://localhost:3000/bg.png 存取，如下圖我們確實成功的能存取到圖片。
+
+
+所以，我們在 app.vue 新增如下程式碼，使用 /bg.png 來等同訪問 ./public/bg.png 檔案：
+
+<template>
+  <div>
+    <img src="/bg.png" />
+  </div>
+</template>
+
+也確實能在網頁中使用 <img src="/bg.png" /> 來顯示圖片。

@@ -1,0 +1,30 @@
+assets 目錄
+Nuxt 3 使用 Vite 或 Webpack 來建構專案進行打包，這些建構工具主要功能是用來處理 JavaScript 檔案將其編譯、轉換或壓縮等，但它們可以透過各自的插件或 Loader 來處理其他檔案類型的資源，例如樣式、字體或 SVG 等。
+
+舉例來說，我們在 assets 下建立一個 Sass 的樣式，當這個 Sass 檔案被載入使用，就會經過插件或 Loader 來進行 CSS 的預處理及編譯，最終產生一個 CSS 檔案，也可以針對單純的 CSS 檔案進行壓縮。又或者說，當使用 <img> 的 src 屬性設定載入我們放置在 assets 的圖片或圖示，最終需要轉換為 Base64 編碼而不是產生一個連結，我們也需要依賴建構工具插件的擴展來幫助。
+
+其主要的目的，不外乎就是為了效能與解決瀏覽器的快取。放置在 assets 目錄下的檔案，可能會被插件或 Loader 進行轉換或壓縮，最終產生出來的檔案也具備連結可以進行存取。
+
+如果使用 public 目錄下導出的 /bg.png，就算我們替換了 bg.png 圖片，可能就會因為檔案根據檔案名稱被瀏覽器快取住，導致前端還是看到舊的檔案。我們在使用 assets 目錄下的檔案時雖然檔名都是 bg.png，但在建構時產生的檔案通常會夾帶 Hash，例如，bg.16a2f98c.png，如此一來我們每次更新圖片，都都會隨機的產生一組 Hash 就能防止瀏覽器快取，導致好像網站更新失效的錯覺。
+
+舉例來說，我們以相同的圖片，改放置於 ./assets/bg.png。
+
+
+nuxt-app/
+├── assets/
+│   └── bg.png
+└── app.vue
+
+<template>
+  <div>
+    <img src="~/assets/bg.png" />
+  </div>
+</template>
+
+在開發環境 ~/assets/bg.png 會轉換為 /_nuxt/assets/bg.png，實際上也能使用 http://localhost:3000/_nuxt/assets/bg.png 進行訪問。
+
+
+但當你的網站部署完成或啟動建構出來的專案，會發現圖片檔名包含了 Hash，例如 /_nuxt/bg.0a299ea1.png。
+
+
+最後我們以最終建構出來的專案結構對比如下圖，在 public 目錄下的檔案，會原封不動的照搬至 .output/public 下，也就可以使用 /bg.png 存取；而放置在 assets 下的檔案，可能會被處理加工，最後檔案名稱會加上一個 Hash 並放置在 .output/public/_nuxt 下，也就需要使用 /_nuxt/bg.0a299ea1.png 存取。
